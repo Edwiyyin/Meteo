@@ -1,11 +1,8 @@
-﻿using MeteoApp.Models;
+using MeteoApp.Models;
 using MeteoApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
-using System.Linq;
 using System.Net.Http;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
@@ -17,7 +14,7 @@ namespace MeteoApp.Forms
         public BufferedPanel() { DoubleBuffered = true; }
     }
 
-    public class MainForm : Form
+    public partial class MainForm : Form
     {
         private readonly MeteoService _meteo = new MeteoService();
         private readonly FavorisService _favorisService = new FavorisService();
@@ -38,6 +35,8 @@ namespace MeteoApp.Forms
         private List<float[]> _mapPolygons = new List<float[]>();
         private bool _mapDetalise = false;
         private List<VilleRecherche> _villesExplorees = new List<VilleRecherche>();
+        private bool _showCursorAura = false;
+        private Point _cursorAuraPos;
 
         private List<(string Nom, double Lat, double Lon)> _capitales = new List<(string, double, double)>
         {
@@ -50,8 +49,9 @@ namespace MeteoApp.Forms
             ("Dubaï", 25.2048, 55.2708), ("Singapour", 1.3521, 103.8198), ("Mumbai", 19.0760, 72.8777),
             ("Mexico", 19.4326, -99.1332), ("São Paulo", -23.5505, -46.6333), ("Shanghai", 31.2304, 121.4737),
             ("Delhi", 28.7041, 77.1025), ("Nairobi", -1.2864, 36.8172), ("Lagos", 6.5244, 3.3792),
-            ("Alger", 30.0444, 3.0588), ("Beyrouth", 36.7538, 3.0588)
+            ("Alger", 36.7538, 3.0588), ("Beyrouth", 33.8938, 35.5018)
         };
+
         private Timer _spinnerTimer;
         private Timer _clockTimer;
         private Timer _mapExploreTimer;
@@ -65,6 +65,7 @@ namespace MeteoApp.Forms
         private Button _btnRechercher, _btnFavori, _btnDarkMode;
         private Label _lblVille, _lblCoord, _lblStatut, _lblHeure;
         private Timer _searchDebounceTimer;
+
         private Color BgMain => _modeSombre ? Color.FromArgb(13, 15, 28) : Color.FromArgb(235, 242, 255);
         private Color BgCard => _modeSombre ? Color.FromArgb(22, 25, 45) : Color.FromArgb(255, 255, 255);
         private Color TextMain => _modeSombre ? Color.FromArgb(220, 228, 255) : Color.FromArgb(10, 26, 60);
@@ -89,10 +90,11 @@ namespace MeteoApp.Forms
             double y = Math.Cos(cLat) * Math.Sin(pLat) - Math.Sin(cLat) * Math.Cos(pLat) * Math.Cos(dLon);
             double z = Math.Sin(cLat) * Math.Sin(pLat) + Math.Cos(cLat) * Math.Cos(pLat) * Math.Cos(dLon);
 
-            if (z < 0) return null; 
+            if (z < 0) return null;
 
             return new PointF(w / 2f + (float)(x * R), h / 2f - (float)(y * R));
         }
+
         public MainForm()
         {
             Text = "MétéoPro";
@@ -137,11 +139,12 @@ namespace MeteoApp.Forms
                     if (type == "LineString")
                     {
                         var arr = new List<float>();
-                        foreach (var pt in geom.GetProperty("coordinates").EnumerateArray()) 
+                        foreach (var pt in geom.GetProperty("coordinates").EnumerateArray())
                         {
-                            arr.Add(pt[1].GetSingle()); 
-                            arr.Add(pt[0].GetSingle()); 
+                            arr.Add(pt[1].GetSingle());
+                            arr.Add(pt[0].GetSingle());
                         }
+
                         list.Add(arr.ToArray());
                     }
                     else if (type == "MultiLineString")
@@ -154,14 +157,17 @@ namespace MeteoApp.Forms
                                 arr.Add(pt[1].GetSingle());
                                 arr.Add(pt[0].GetSingle());
                             }
+
                             list.Add(arr.ToArray());
                         }
                     }
                 }
+
                 _mapPolygons = list;
                 _mapDetalise = true;
                 _panelCarte?.Invalidate();
             }
+<<<<<<< HEAD
             catch { }
         }
         private void BuildUI()
@@ -956,10 +962,12 @@ namespace MeteoApp.Forms
                     SetStatut($"Aucun résultat pour '{query}'.");
                 }
             }
+=======
+>>>>>>> 24b95dece24fc06755bdd078ff84df590b0a6702
             catch
             {
-                SetStatut("Erreur lors de la recherche de villes.");
             }
+<<<<<<< HEAD
             finally
             {
                 _btnRechercher.Enabled = true;
@@ -1219,6 +1227,8 @@ namespace MeteoApp.Forms
             _panelCarte.Height = _panelDetail.Bottom - _panelCards.Top;
             _panelCarte.Invalidate();
             _panelDetail.Invalidate();
+=======
+>>>>>>> 24b95dece24fc06755bdd078ff84df590b0a6702
         }
     }
 }

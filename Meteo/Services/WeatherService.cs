@@ -2,12 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MeteoApp.Services
 {
-    public class MeteoService
+    public partial class MeteoService
     {
         private static readonly string API_KEY = Environment.GetEnvironmentVariable("API_KEY") ?? "";
         private const string BASE_URL = "https://api.openweathermap.org/data/2.5";
@@ -36,6 +35,7 @@ namespace MeteoApp.Services
             return await FetchPrevisions(url);
         }
 
+<<<<<<< HEAD
         private async Task<(VilleInfo ville, List<MeteoJour> previsions)> FetchPrevisions(string url)
         {
             string json = await _client.GetStringAsync(url);
@@ -143,39 +143,10 @@ namespace MeteoApp.Services
             }
         }
 
+=======
+>>>>>>> 24b95dece24fc06755bdd078ff84df590b0a6702
         public static string GetIconeUrl(string code)
             => $"https://openweathermap.org/img/wn/{code}@2x.png";
-
-        public async Task<List<VilleRecherche>> RechercherVilles(string query)
-        {
-            try
-            {
-                string url = $"https://geocoding-api.open-meteo.com/v1/search?name={Uri.EscapeDataString(query)}&count=50&language=fr&format=json";
-                string json = await _client.GetStringAsync(url);
-                using var doc = JsonDocument.Parse(json);
-
-                var resultats = new List<VilleRecherche>();
-                if (!doc.RootElement.TryGetProperty("results", out var results)) return resultats;
-
-                foreach (var item in results.EnumerateArray())
-                {
-                    var v = new VilleRecherche
-                    {
-                        Nom = item.GetProperty("name").GetString(),
-                        Pays = item.TryGetProperty("country", out var country) ? country.GetString() : "",
-                        Etat = item.TryGetProperty("admin1", out var state) ? state.GetString() : "",
-                        Latitude = item.GetProperty("latitude").GetDouble(),
-                        Longitude = item.GetProperty("longitude").GetDouble()
-                    };
-                    resultats.Add(v);
-                }
-                return resultats;
-            }
-            catch
-            {
-                return new List<VilleRecherche>();
-            }
-        }
 
         private static string Capitaliser(string s)
             => string.IsNullOrEmpty(s) ? s : char.ToUpper(s[0]) + s.Substring(1);
