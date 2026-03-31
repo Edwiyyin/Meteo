@@ -17,6 +17,7 @@
         public int UvIndex { get; set; }
         public string Lever { get; set; }
         public string Coucher { get; set; }
+        public int ProbaPluie { get; set; }
     }
 
     public class VilleFavorite

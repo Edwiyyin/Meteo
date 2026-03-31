@@ -79,6 +79,10 @@ namespace MeteoApp.Services
                 if (item.TryGetProperty("visibility", out var vis))
                     visibilite = Math.Round(vis.GetDouble() / 1000.0, 1);
 
+                int pop = 0;
+                if (item.TryGetProperty("pop", out var popProp))
+                    pop = (int)(popProp.GetDouble() * 100);
+
                 previsions.Add(new MeteoJour
                 {
                     Date = date,
@@ -94,7 +98,8 @@ namespace MeteoApp.Services
                     Nuages = clouds.GetProperty("all").GetInt32(),
                     Visibilite = visibilite,
                     Lever = lever,
-                    Coucher = coucher
+                    Coucher = coucher,
+                    ProbaPluie = pop
                 });
 
                 if (previsions.Count >= 5) break;

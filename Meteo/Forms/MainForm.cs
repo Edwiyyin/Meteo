@@ -220,12 +220,12 @@ namespace MeteoApp.Forms
             _cmbVille = new ComboBox
             {
                 Location = new Point(240, 20),
-                Width = 230,
+                Width = 280,
                 Height = 34,
-                Font = new Font("Segoe UI", 10),
+                Font = new Font("Segoe UI", 11),
                 FlatStyle = FlatStyle.Flat,
-                BackColor = Color.FromArgb(25, 30, 60),
-                ForeColor = Color.FromArgb(80, 100, 150),
+                BackColor = Color.FromArgb(30, 35, 60),
+                ForeColor = Color.FromArgb(140, 160, 200),
                 Parent = _header,
                 DropDownHeight = 300,
                 MaxDropDownItems = 12,
@@ -235,11 +235,11 @@ namespace MeteoApp.Forms
             _cmbVille.Text = "Rechercher une ville...";
             _cmbVille.GotFocus += (s, e) =>
             {
-                if (_cmbVille.Text == "Rechercher une ville...") { _cmbVille.Text = ""; _cmbVille.ForeColor = Color.FromArgb(180, 200, 255); }
+                if (_cmbVille.Text == "Rechercher une ville...") { _cmbVille.Text = ""; _cmbVille.ForeColor = Color.FromArgb(220, 230, 255); }
             };
             _cmbVille.LostFocus += (s, e) =>
             {
-                if (string.IsNullOrWhiteSpace(_cmbVille.Text)) { _cmbVille.Text = "Rechercher une ville..."; _cmbVille.ForeColor = Color.FromArgb(80, 100, 150); }
+                if (string.IsNullOrWhiteSpace(_cmbVille.Text)) { _cmbVille.Text = "Rechercher une ville..."; _cmbVille.ForeColor = Color.FromArgb(140, 160, 200); }
             };
             _cmbVille.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { e.SuppressKeyPress = true; LancerRechercheListeVilles(); } };
             _cmbVille.SelectionChangeCommitted += (s, e) => { if (_cmbVille.SelectedIndex >= 0) LancerRecherche(); };
@@ -256,14 +256,16 @@ namespace MeteoApp.Forms
                 }
             };
 
-            _btnRechercher = CreerBtnHeader("🔍  Rechercher", 482, 20, 140, Color.FromArgb(99, 179, 255), Color.FromArgb(5, 15, 40));
+            _btnRechercher = CreerBtnHeader("🔍 Chercher", 530, 19, 120, Color.FromArgb(0, 120, 215), Color.White);
+            _btnRechercher.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             _btnRechercher.Click += (s, e) => LancerRechercheListeVilles();
 
-            _btnFavori = CreerBtnHeader("★  Favori", 632, 20, 100, Color.FromArgb(255, 196, 57), Color.FromArgb(30, 20, 5));
+            _btnFavori = CreerBtnHeader("☆ Ajouter aux favoris", 660, 19, 170, Color.FromArgb(45, 50, 80), Color.FromArgb(255, 200, 50));
+            _btnFavori.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             _btnFavori.Enabled = false;
             _btnFavori.Click += BtnFavori_Click;
 
-            _btnDarkMode = CreerBtnHeader("☀", 742, 20, 42, Color.FromArgb(45, 52, 88), Color.FromArgb(180, 200, 255));
+            _btnDarkMode = CreerBtnHeader("☀", 840, 19, 42, Color.FromArgb(45, 52, 88), Color.FromArgb(180, 200, 255));
             _btnDarkMode.Font = new Font("Segoe UI", 13);
             _btnDarkMode.Click += (s, e) => { _modeSombre = !_modeSombre; AppliquerTheme(); };
 
@@ -541,17 +543,23 @@ namespace MeteoApp.Forms
 
             DrawTempChart(g, 16, 44, 415, 148);
 
-            int xs = 455, ys = 44;
-            DrawStatBox(g, xs, ys, "🌡", "Ressenti", $"{j.FeelLike:F1}°C");
-            DrawStatBox(g, xs, ys + 44, "📊", "Pression", $"{j.Pression:F0} hPa");
-            DrawStatBox(g, xs, ys + 88, "👁", "Visibilité", $"{j.Visibilite:F1} km");
-            DrawStatBox(g, xs, ys + 132, "☁", "Nuages", $"{j.Nuages}%");
-            DrawStatBox(g, xs + 195, ys, "🌅", "Lever", j.Lever);
-            DrawStatBox(g, xs + 195, ys + 44, "🌇", "Coucher", j.Coucher);
-            DrawStatBox(g, xs + 195, ys + 88, "💧", "Humidité", $"{j.Humidite}%");
-            DrawStatBox(g, xs + 195, ys + 132, "🌬", "Vent", $"{j.VitesseVent:F0} km/h");
+            int xs = 440;
+            int gapX = 110;
+            int gapY = 46;
 
-            DrawWindCompass(g, W - 90, H / 2 - 10, 70, j.VitesseVent);
+            DrawStatBox(g, xs, 44, "🌡", "Ressenti", $"{j.FeelLike:F1}°C");
+            DrawStatBox(g, xs, 44 + gapY, "📊", "Pression", $"{j.Pression:F0} hPa");
+            DrawStatBox(g, xs, 44 + 2 * gapY, "👁", "Visibilité", $"{j.Visibilite:F1} km");
+
+            DrawStatBox(g, xs + gapX, 44, "🌅", "Lever", j.Lever);
+            DrawStatBox(g, xs + gapX, 44 + gapY, "🌇", "Coucher", j.Coucher);
+            DrawStatBox(g, xs + gapX, 44 + 2 * gapY, "☔", "Pluie", $"{j.ProbaPluie}%");
+
+            DrawStatBox(g, xs + 2 * gapX, 44, "💧", "Humidité", $"{j.Humidite}%");
+            DrawStatBox(g, xs + 2 * gapX, 44 + gapY, "☁", "Nuages", $"{j.Nuages}%");
+            DrawStatBox(g, xs + 2 * gapX, 44 + 2 * gapY, "🌬", "Vent", $"{j.VitesseVent:F0} km/h");
+
+            DrawWindCompass(g, W - 80, H / 2, 70, j.VitesseVent);
         }
 
         private void DrawStatBox(Graphics g, int x, int y, string icon, string label, string valeur)
@@ -1041,7 +1049,7 @@ namespace MeteoApp.Forms
 
             var barBg = new Panel { Location = new Point(14, yOff + 178), Size = new Size(134, 5), BackColor = CardBorder, Parent = card };
             new Panel { Location = new Point(0, 0), Size = new Size((int)(134 * jour.Humidite / 100.0), 5), BackColor = Accent, Parent = barBg };
-            new Label { Text = $"💧{jour.Humidite}%  💨{jour.VitesseVent:F0}  ☁{jour.Nuages}%", Font = new Font("Segoe UI", 6.8f), ForeColor = TextMuted, Location = new Point(4, yOff + 186), Size = new Size(154, 14), TextAlign = ContentAlignment.MiddleCenter, BackColor = Color.Transparent, Parent = card };
+            new Label { Text = $"💧{jour.Humidite}%  ☔{jour.ProbaPluie}%  💨{jour.VitesseVent:F0}", Font = new Font("Segoe UI", 6.8f), ForeColor = TextMuted, Location = new Point(4, yOff + 186), Size = new Size(154, 14), TextAlign = ContentAlignment.MiddleCenter, BackColor = Color.Transparent, Parent = card };
 
             Action onClick = () =>
             {
@@ -1119,12 +1127,12 @@ namespace MeteoApp.Forms
             bool isFav = _favoris.Any(f => string.Equals(f.Nom, _villeActuelle.Nom, StringComparison.OrdinalIgnoreCase));
             if (isFav)
             {
-                _btnFavori.Text = "★ Retirer";
+                _btnFavori.Text = "★ Retirer des favoris";
                 _btnFavori.ForeColor = Color.FromArgb(255, 100, 100);
             }
             else
             {
-                _btnFavori.Text = "★ Favori";
+                _btnFavori.Text = "☆ Ajouter aux favoris";
                 _btnFavori.ForeColor = AccentGold;
             }
         }
@@ -1183,10 +1191,17 @@ namespace MeteoApp.Forms
 
         private Button CreerBtnHeader(string text, int x, int y, int w, Color bg, Color fg)
         {
-            var b = new Button { Text = text, Location = new Point(x, y), Size = new Size(w, 32), BackColor = bg, FlatStyle = FlatStyle.Flat, ForeColor = fg, Font = new Font("Segoe UI", 9f, FontStyle.Bold), Cursor = Cursors.Hand, Parent = _header };
+            var b = new Button { Text = text, Location = new Point(x, y), Size = new Size(w, 34), BackColor = bg, FlatStyle = FlatStyle.Flat, ForeColor = fg, Font = new Font("Segoe UI", 9f, FontStyle.Bold), Cursor = Cursors.Hand, Parent = _header };
             b.FlatAppearance.BorderSize = 0;
             b.MouseEnter += (s, e) => b.BackColor = ControlPaint.Light(bg, 0.15f);
             b.MouseLeave += (s, e) => b.BackColor = bg;
+            b.Paint += (s, e) => 
+            {
+                var g = e.Graphics;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                using var path = RoundedRect(0, 0, b.Width - 1, b.Height - 1, 8);
+                b.Region = new Region(path);
+            };
             return b;
         }
 
