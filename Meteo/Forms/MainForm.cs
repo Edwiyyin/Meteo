@@ -167,10 +167,10 @@ namespace MeteoApp.Forms
                 _mapDetalise = true;
                 _panelCarte?.Invalidate();
             }
-<<<<<<< HEAD
-            catch { }
-        }
-        private void BuildUI()
+    catch { }
+}
+
+private void BuildUI()
         {
             _statusBar = new Panel { Dock = DockStyle.Bottom, Height = 28 };
             _statusBar.Paint += (s, e) =>
@@ -962,17 +962,15 @@ namespace MeteoApp.Forms
                     SetStatut($"Aucun résultat pour '{query}'.");
                 }
             }
-=======
->>>>>>> 24b95dece24fc06755bdd078ff84df590b0a6702
-            catch
-            {
-            }
-<<<<<<< HEAD
-            finally
-            {
-                _btnRechercher.Enabled = true;
-            }
-        }
+    catch
+    {
+        SetStatut("Erreur lors de la recherche de villes.");
+    }
+    finally
+    {
+        _btnRechercher.Enabled = true;
+    }
+}
         private void AfficherCardsAvecAnimation(List<MeteoJour> previsions)
         {
             _panelCards.Controls.Clear();
@@ -1227,8 +1225,6 @@ namespace MeteoApp.Forms
             _panelCarte.Height = _panelDetail.Bottom - _panelCards.Top;
             _panelCarte.Invalidate();
             _panelDetail.Invalidate();
-=======
->>>>>>> 24b95dece24fc06755bdd078ff84df590b0a6702
         }
     }
 }
